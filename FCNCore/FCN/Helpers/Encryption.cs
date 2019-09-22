@@ -13,9 +13,10 @@ namespace FCN.Helpers
             byte[] encryptBytes = Encoding.Unicode.GetBytes(encryptText);
             using (Aes encryptor = Aes.Create())
             {
-                Rfc2898DeriveBytes rdb = new Rfc2898DeriveBytes(encryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes rdb = new Rfc2898DeriveBytes(encryptionKey, new byte[] { 87, 97, 115, 104, 105, 110, 103, 116, 111, 110, 32, 78, 97, 116, 105, 111, 110, 97, 108, 115 });
                 encryptor.Key = rdb.GetBytes(32);
                 encryptor.IV = rdb.GetBytes(16);
+                encryptor.Padding = PaddingMode.Zeros;
                 using (MemoryStream ms = new MemoryStream())
                 {
                     using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
@@ -37,9 +38,10 @@ namespace FCN.Helpers
             byte[] decryptBytes = Convert.FromBase64String(decryptText);
             using (Aes encryptor = Aes.Create())
             {
-                Rfc2898DeriveBytes rdb = new Rfc2898DeriveBytes(encryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes rdb = new Rfc2898DeriveBytes(encryptionKey, new byte[] { 87, 97, 115, 104, 105, 110, 103, 116, 111, 110, 32, 78, 97, 116, 105, 111, 110, 97, 108, 115 });
                 encryptor.Key = rdb.GetBytes(32);
                 encryptor.IV = rdb.GetBytes(16);
+                encryptor.Padding = PaddingMode.Zeros;
                 using (MemoryStream ms = new MemoryStream())
                 {
                     using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
