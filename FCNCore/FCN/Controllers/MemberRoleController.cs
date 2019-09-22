@@ -14,6 +14,7 @@ namespace FCN.Controllers
     public class MemberRoleController : ControllerBase
     {
         // GET: api/MemberRole
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IEnumerable<MemberRoleData> GetMemberRole()
         {
