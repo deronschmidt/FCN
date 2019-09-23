@@ -1,0 +1,25 @@
+<div class="container py-5">
+    <h3 class="text-center text-uppercase">List of Service Categories</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="text-center text-uppercase">
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let category of categories">
+                <td>{{category.categoryName}}</td>
+                <td>{{category.description}}</td>
+                <td>
+                        <div class="btn-group-sm btn-group-horizontal">
+                            <button class="btn btn-primary my-small-btn btn-space" ng-click="edit(item)">Edit</button>
+                            <button class="btn btn-danger my-small-btn btn-space" ng-click="delete(item)">Delete</button>
+                        </div>
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-sm btn-outline-primary" (click)="open()">Add New Category</button>
+</div>
