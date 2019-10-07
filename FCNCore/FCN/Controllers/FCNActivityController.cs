@@ -78,23 +78,45 @@ namespace FCN.Controllers
         public ActionResult<FCNActivityData> PostFCNActivity([FromBody] FCNActivityData data)
         {
             int id = 0;
+            
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
 
-            string sqlInsert = string.Format("exec FCN..ins_fcn_activity '{0}','{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                            data.Description.Replace("'","''"), data.Comments.Replace("'", "''"), data.ActivityDate, data.CommunityID, 
-                            data.FCNMemberID, data.ServiceCategoryID, Utilities.ToDBNull(data.ServiceSubcategoryID),
-                            data.PeopleServed, data.UnpaidTime, data.PaidTime, data.Mileage, data.OtherExpenses);
-            using (SqlDataReader reader = Utilities.ExecQuery(sqlInsert))
+            string sqlInsert = "exec FCN..ins_fcn_activity @description, @comments, @activity_date, @communityID, @fcn_memberID, @service_categoryID, @service_subcategoryID, " +
+                                                          "@people_served, @unpaid_time, @paid_time, @mileage, @other_expenses";
+
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                while (reader.Read())
+                fcnDBConnection.Open();
+                using (SqlCommand cmdInsert = new SqlCommand(sqlInsert, fcnDBConnection))
                 {
-                    if (reader["ID"] != DBNull.Value)
-                    {
-                        id = (int)reader["ID"];
-                    }
+                    cmdInsert.Parameters.AddWithValue("@description", data.Description);
+                    cmdInsert.Parameters.AddWithValue("@comments", data.Comments);
+                    cmdInsert.Parameters.AddWithValue("@activity_date", data.ActivityDate);
+                    cmdInsert.Parameters.AddWithValue("@communityID", data.CommunityID);
+                    cmdInsert.Parameters.AddWithValue("@fcn_memberID", data.FCNMemberID);
+                    cmdInsert.Parameters.AddWithValue("@service_categoryID", data.ServiceCategoryID);
+                    cmdInsert.Parameters.AddWithValue("@service_subcategoryID", data.ServiceSubcategoryID);
+                    cmdInsert.Parameters.AddWithValue("@people_served", data.PeopleServed);
+                    cmdInsert.Parameters.AddWithValue("@unpaid_time", data.UnpaidTime);
+                    cmdInsert.Parameters.AddWithValue("@paid_time", data.PaidTime);
+                    cmdInsert.Parameters.AddWithValue("@mileage", data.Mileage);
+                    cmdInsert.Parameters.AddWithValue("@other_expenses", data.OtherExpenses);
 
-                    if (id == 0)
+                    using (SqlDataReader reader = cmdInsert.ExecuteReader())
                     {
-                        return NotFound();
+                        while (reader.Read())
+                        {
+                            if (reader["ID"] != DBNull.Value)
+                            {
+                                id = (int)reader["ID"];
+                            }
+
+                            if (id == 0)
+                            {
+                                return NotFound();
+                            }
+                        }
                     }
                 }
             }
@@ -107,30 +129,55 @@ namespace FCN.Controllers
         [HttpPut("{id}")]
         public ActionResult<FCNActivityData> PutFCNActivity(int id, [FromBody] FCNActivityData data)
         {
-            string sqlUpdate = string.Format("exec FCN..upd_fcn_activity {0},'{1}','{2}','{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12}",
-                                id, data.Description.Replace("'", "''"), data.Comments.Replace("'", "''"), data.ActivityDate, data.CommunityID,
-                                data.FCNMemberID, data.ServiceCategoryID, Utilities.ToDBNull(data.ServiceSubcategoryID),
-                                data.PeopleServed, data.UnpaidTime, data.PaidTime, data.Mileage, data.OtherExpenses);
-            bool cmdStatus = Utilities.ExecNonQuery(sqlUpdate);
-            if (cmdStatus)
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlUpdate = "exec FCN..upd_fcn_activity @ID, @description, @comments, @activity_date, @communityID, @fcn_memberID, @service_categoryID, @service_subcategoryID, " +
+                                                          "@people_served, @unpaid_time, @paid_time, @mileage, @other_expenses";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                data = GetFCNActivity().FirstOrDefault((p) => p.ID == id);
-                return Ok(data);
+                fcnDBConnection.Open();
+                using (SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, fcnDBConnection))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@ID", id);
+                    cmdUpdate.Parameters.AddWithValue("@description", data.Description);
+                    cmdUpdate.Parameters.AddWithValue("@comments", data.Comments);
+                    cmdUpdate.Parameters.AddWithValue("@activity_date", data.ActivityDate);
+                    cmdUpdate.Parameters.AddWithValue("@communityID", data.CommunityID);
+                    cmdUpdate.Parameters.AddWithValue("@fcn_memberID", data.FCNMemberID);
+                    cmdUpdate.Parameters.AddWithValue("@service_categoryID", data.ServiceCategoryID);
+                    cmdUpdate.Parameters.AddWithValue("@service_subcategoryID", data.ServiceSubcategoryID);
+                    cmdUpdate.Parameters.AddWithValue("@people_served", data.PeopleServed);
+                    cmdUpdate.Parameters.AddWithValue("@unpaid_time", data.UnpaidTime);
+                    cmdUpdate.Parameters.AddWithValue("@paid_time", data.PaidTime);
+                    cmdUpdate.Parameters.AddWithValue("@mileage", data.Mileage);
+                    cmdUpdate.Parameters.AddWithValue("@other_expenses", data.OtherExpenses);
+                    cmdUpdate.ExecuteNonQuery();
+                }
             }
-            else
-                return BadRequest();
+            data = GetFCNActivity().FirstOrDefault((p) => p.ID == id);
+            return Ok(data);
         }
 
         // DELETE: api/FCNActivity/5
         [HttpDelete("{id}")]
         public ActionResult DeleteFCNActivity(int id)
         {
-            string sqlDelete = string.Format("exec FCN..del_fcn_activity {0}", id);
-            bool cmdStatus = Utilities.ExecNonQuery(sqlDelete);
-            if (cmdStatus)
-                return NoContent();
-            else
-                return BadRequest();
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlDelete = "exec FCN..del_fcn_activity @ID";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
+            {
+                fcnDBConnection.Open();
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, fcnDBConnection))
+                {
+                    cmdDelete.Parameters.AddWithValue("@ID", id);
+                    cmdDelete.ExecuteNonQuery();
+                }
+            }
+
+            return NoContent();
         }
     }
 }

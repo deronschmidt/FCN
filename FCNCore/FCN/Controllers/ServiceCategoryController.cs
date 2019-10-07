@@ -59,22 +59,36 @@ namespace FCN.Controllers
         {
             int id = 0;
 
-            string sqlInsert = string.Format("exec FCN..ins_service_category '{0}','{1}',{2}",
-                            data.CategoryName.Replace("'", "''"), data.Description.Replace("'", "''"),
-                            data.Active.ToString() == "True" ? 1 : 0);
+            int isActive = (data.Active.ToString() == "True" ? 1 : 0);
 
-            using (SqlDataReader reader = Utilities.ExecQuery(sqlInsert))
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlInsert = "exec FCN..ins_service_category @category_name, @description, @active";
+
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                while (reader.Read())
+                fcnDBConnection.Open();
+                using (SqlCommand cmdInsert = new SqlCommand(sqlInsert, fcnDBConnection))
                 {
-                    if (reader["ID"] != DBNull.Value)
-                    {
-                        id = (int)reader["ID"];
-                    }
+                    cmdInsert.Parameters.AddWithValue("@category_name", data.CategoryName);
+                    cmdInsert.Parameters.AddWithValue("@description", data.Description);
+                    cmdInsert.Parameters.AddWithValue("@active", isActive);
 
-                    if (id == 0)
+                    using (SqlDataReader reader = cmdInsert.ExecuteReader())
                     {
-                        return NotFound();
+                        while (reader.Read())
+                        {
+                            if (reader["ID"] != DBNull.Value)
+                            {
+                                id = (int)reader["ID"];
+                            }
+
+                            if (id == 0)
+                            {
+                                return NotFound();
+                            }
+                        }
                     }
                 }
             }
@@ -88,17 +102,25 @@ namespace FCN.Controllers
         [HttpPut("{id}")]
         public ActionResult<ServiceCategoryData> PutServiceCategory(int id, [FromBody] ServiceCategoryData data)
         {
-            string sqlUpdate = string.Format("exec FCN..upd_service_category {0},'{1}','{2}',{3}",
-                     id, data.CategoryName.Replace("'", "''"), data.Description.Replace("'", "''"),
-                     data.Active.ToString() == "True" ? 1 : 0);
-            bool cmdStatus = Utilities.ExecNonQuery(sqlUpdate);
-            if (cmdStatus)
+            int isActive = (data.Active.ToString() == "True" ? 1 : 0);
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlUpdate = "exec FCN..upd_service_category @ID, @category_name, @description, @active";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                data = GetServiceCategory().FirstOrDefault((p) => p.ID == id);
-                return Ok(data);
+                fcnDBConnection.Open();
+                using (SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, fcnDBConnection))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@ID", id);
+                    cmdUpdate.Parameters.AddWithValue("@category_name", data.CategoryName);
+                    cmdUpdate.Parameters.AddWithValue("@description", data.Description);
+                    cmdUpdate.Parameters.AddWithValue("@active", isActive);
+                    cmdUpdate.ExecuteNonQuery();
+                }
             }
-            else
-                return BadRequest();
+            data = GetServiceCategory().FirstOrDefault((p) => p.ID == id);
+            return Ok(data);
         }
 
         // DELETE: api/ServiceCategory/5
@@ -106,12 +128,21 @@ namespace FCN.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteServiceCategory(int id)
         {
-            string sqlDelete = string.Format("exec FCN..del_service_category {0}", id);
-            bool cmdStatus = Utilities.ExecNonQuery(sqlDelete);
-            if (cmdStatus)
-                return NoContent();
-            else
-                return BadRequest();
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlDelete = "exec FCN..del_service_category @ID";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
+            {
+                fcnDBConnection.Open();
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, fcnDBConnection))
+                {
+                    cmdDelete.Parameters.AddWithValue("@ID", id);
+                    cmdDelete.ExecuteNonQuery();
+                }
+            }
+
+            return NoContent();
         }
     }
 }

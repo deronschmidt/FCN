@@ -59,23 +59,36 @@ namespace FCN.Controllers
         public ActionResult<MemberRoleData> PostMemberRole([FromBody] MemberRoleData data)
         {
             int id = 0;
+            int isActive = (data.Active.ToString() == "True" ? 1 : 0);
 
-            string sqlInsert = string.Format("exec FCN..ins_member_role '{0}','{1}',{2}",
-                            data.RoleType.Replace("'", "''"), data.Description.Replace("'", "''"),
-                            data.Active.ToString() == "True" ? 1 : 0);
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
 
-            using (SqlDataReader reader = Utilities.ExecQuery(sqlInsert))
+            string sqlInsert = "exec FCN..ins_member_role @role_type, @description, @active";
+
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                while (reader.Read())
+                fcnDBConnection.Open();
+                using (SqlCommand cmdInsert = new SqlCommand(sqlInsert, fcnDBConnection))
                 {
-                    if (reader["ID"] != DBNull.Value)
-                    {
-                        id = (int)reader["ID"];
-                    }
+                    cmdInsert.Parameters.AddWithValue("@role_type", data.RoleType);
+                    cmdInsert.Parameters.AddWithValue("@description", data.Description);
+                    cmdInsert.Parameters.AddWithValue("@active", isActive);
 
-                    if (id == 0)
+                    using (SqlDataReader reader = cmdInsert.ExecuteReader())
                     {
-                        return NotFound();
+                        while (reader.Read())
+                        {
+                            if (reader["ID"] != DBNull.Value)
+                            {
+                                id = (int)reader["ID"];
+                            }
+
+                            if (id == 0)
+                            {
+                                return NotFound();
+                            }
+                        }
                     }
                 }
             }
@@ -89,18 +102,25 @@ namespace FCN.Controllers
         [HttpPut("{id}")]
         public ActionResult<MemberRoleData> PutMemberRole(int id, [FromBody] MemberRoleData data)
         {
-            string sqlUpdate = string.Format("exec FCN..upd_member_role {0},'{1}','{2}',{3}",
-                            id, data.RoleType.Replace("'", "''"), data.Description.Replace("'", "''"),
-                            data.Active.ToString() == "True" ? 1 : 0);
-            bool cmdStatus = Utilities.ExecNonQuery(sqlUpdate);
+            int isActive = (data.Active.ToString() == "True" ? 1 : 0);
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
 
-            if (cmdStatus)
+            string sqlUpdate = "exec FCN..upd_member_role @ID, @role_type, @description, @active";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                data = GetMemberRole().FirstOrDefault((p) => p.ID == id);
-                return Ok(data);
+                fcnDBConnection.Open();
+                using (SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, fcnDBConnection))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@ID", id);
+                    cmdUpdate.Parameters.AddWithValue("@role_type", data.RoleType);
+                    cmdUpdate.Parameters.AddWithValue("@description", data.Description);
+                    cmdUpdate.Parameters.AddWithValue("@active", isActive);
+                    cmdUpdate.ExecuteNonQuery();
+                }
             }
-            else
-                return BadRequest();
+            data = GetMemberRole().FirstOrDefault((p) => p.ID == id);
+            return Ok(data);
         }
 
         // DELETE: api/MemberRole/5
@@ -108,12 +128,21 @@ namespace FCN.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteMemberRole(int id)
         {
-            string sqlDelete = string.Format("exec FCN..del_member_role {0}", id);
-            bool cmdStatus = Utilities.ExecNonQuery(sqlDelete);
-            if (cmdStatus)
-                return NoContent();
-            else
-                return BadRequest();
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlDelete = "exec FCN..del_member_role @ID";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
+            {
+                fcnDBConnection.Open();
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, fcnDBConnection))
+                {
+                    cmdDelete.Parameters.AddWithValue("@ID", id);
+                    cmdDelete.ExecuteNonQuery();
+                }
+            }
+
+            return NoContent();
         }
     }
 }
