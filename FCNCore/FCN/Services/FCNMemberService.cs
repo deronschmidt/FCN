@@ -151,26 +151,54 @@ namespace FCN.Services
                 throw new AppException("Email " + data.Email + " is already taken");
 
             string encryptedPassword = Encryption.Encrypt(password);
-            string sqlInsert = string.Format("exec FCN..ins_fcn_member {0},'{1}','{2}','{3}',{4},'{5}','{6}','{7}','{8}','{9}'" +
-                                        ",{10},{11},{12},{13},'{14}',{15},{16},'{17}'",
-                                    data.RoleID, data.FirstName.Replace("'", "''"), data.LastName.Replace("'", "''"), data.Address1.Replace("'", "''"),
-                                    Utilities.ToDBNull(data.Address2), data.City.Replace("'", "''"), data.State, data.ZipCode, data.Email.Replace("'", "''"),
-                                    data.Phone.Replace("'", "''"), Utilities.ToDBNull(data.AlternatePhone), data.CommunityID, data.Licensed.ToString() == "True" ? 1 : 0,
-                                    data.Active.ToString() == "True" ? 1 : 0, data.ActiveDate, Utilities.ToDBNull(data.InactiveDate), data.Administrator.ToString() == "True" ? 1 : 0,
-                                    encryptedPassword);
+            int isActive = (data.Active.ToString() == "True" ? 1 : 0);
+            int isLicensed = (data.Licensed.ToString() == "True" ? 1 : 0);
+            int isAdmin = (data.Administrator.ToString() == "True" ? 1 : 0);
 
-            using (SqlDataReader reader = Utilities.ExecQuery(sqlInsert))
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlInsert = "exec FCN..ins_fcn_member @roleID, @first_name, @last_name, @address1, @address2, @city, @state, @zip_code, @email, " +
+                                                        "@phone, @alt_phone, @communityID, @licensed, @active, @active_date, @inactive_date, @administrator, " +
+                                                        "@password";
+
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
             {
-                while (reader.Read())
+                fcnDBConnection.Open();
+                using (SqlCommand cmdInsert = new SqlCommand(sqlInsert, fcnDBConnection))
                 {
-                    if (reader["ID"] != DBNull.Value)
+                    cmdInsert.Parameters.AddWithValue("@roleID", data.RoleID);
+                    cmdInsert.Parameters.AddWithValue("@first_name", data.FirstName);
+                    cmdInsert.Parameters.AddWithValue("@last_name", data.LastName);
+                    cmdInsert.Parameters.AddWithValue("@address1", data.Address1);
+                    cmdInsert.Parameters.AddWithValue("@address2", data.Address2);
+                    cmdInsert.Parameters.AddWithValue("@city", data.City);
+                    cmdInsert.Parameters.AddWithValue("@state", data.State);
+                    cmdInsert.Parameters.AddWithValue("@zip_code", data.ZipCode);
+                    cmdInsert.Parameters.AddWithValue("@email", data.Email);
+                    cmdInsert.Parameters.AddWithValue("@phone", data.Phone);
+                    cmdInsert.Parameters.AddWithValue("@alt_phone", data.AlternatePhone);
+                    cmdInsert.Parameters.AddWithValue("@communityID", data.CommunityID);
+                    cmdInsert.Parameters.AddWithValue("@licensed", isLicensed);
+                    cmdInsert.Parameters.AddWithValue("@active", isActive);
+                    cmdInsert.Parameters.AddWithValue("@active_date", data.ActiveDate);
+                    cmdInsert.Parameters.AddWithValue("@inactive_date", Utilities.ToDBNull(data.InactiveDate));
+                    cmdInsert.Parameters.AddWithValue("@administrator", isAdmin);
+                    cmdInsert.Parameters.AddWithValue("@password", encryptedPassword);
+                    using (SqlDataReader reader = cmdInsert.ExecuteReader())
                     {
-                        id = (int)reader["ID"];
-                    }
+                        while (reader.Read())
+                        {
+                            if (reader["ID"] != DBNull.Value)
+                            {
+                                id = (int)reader["ID"];
+                            }
 
-                    if (id == 0)
-                    {
-                        return newMember;
+                            if (id == 0)
+                            {
+                                return newMember;
+                            }
+                        }
                     }
                 }
             }
@@ -184,33 +212,71 @@ namespace FCN.Services
             FCNMemberData originalMember = GetFCNMemberByID(data.ID);
             if (originalMember == null)
                 throw new AppException("User not found");
-            bool cmdStatus = false;
             if (data.Email != originalMember.Email)
             {
                 // email has changed so check if the new username is already taken
                 if (_fcnMembers.Any(x => x.Email == data.Email))
                     throw new AppException("Email " + data.Email + " is already taken");
             }
-            string sqlUpdate = string.Format("exec FCN..upd_fcn_member {0},{1},'{2}','{3}','{4}',{5},'{6}','{7}','{8}','{9}'" +
-                                    ",'{10}',{11},{12},{13},{14},'{15}',{16},{17}",
-                                    data.ID, data.RoleID, data.FirstName.Replace("'", "''"), data.LastName.Replace("'", "''"), data.Address1.Replace("'", "''"),
-                                    Utilities.ToDBNull(data.Address2), data.City.Replace("'", "''"), data.State, data.ZipCode, data.Email.Replace("'", "''"),
-                                    data.Phone.Replace("'", "''"), Utilities.ToDBNull(data.AlternatePhone), data.CommunityID, data.Licensed.ToString() == "True" ? 1 : 0,
-                                    data.Active.ToString() == "True" ? 1 : 0, data.ActiveDate, Utilities.ToDBNull(data.InactiveDate), data.Administrator.ToString() == "True" ? 1 : 0);
-            cmdStatus = Utilities.ExecNonQuery(sqlUpdate);
-            return cmdStatus;
+
+            int isActive = (data.Active.ToString() == "True" ? 1 : 0);
+            int isLicensed = (data.Licensed.ToString() == "True" ? 1 : 0);
+            int isAdmin = (data.Administrator.ToString() == "True" ? 1 : 0);
+            //Get connection string - to be replaced with different credentials later
+            string fcnConnectionString = Utilities.GetDBConnectionString();
+
+            string sqlUpdate = "exec FCN..upd_fcn_member @ID, @roleID, @first_name, @last_name, @address1, @address2, @city, @state, @zip_code, @email, " +
+                                                        "@phone, @alt_phone, @communityID, @licensed, @active, @active_date, @inactive_date, @administrator";
+            using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
+            {
+                fcnDBConnection.Open();
+                using (SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, fcnDBConnection))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@ID", data.ID);
+                    cmdUpdate.Parameters.AddWithValue("@roleID", data.RoleID);
+                    cmdUpdate.Parameters.AddWithValue("@first_name", data.FirstName);
+                    cmdUpdate.Parameters.AddWithValue("@last_name", data.LastName);
+                    cmdUpdate.Parameters.AddWithValue("@address1", data.Address1);
+                    cmdUpdate.Parameters.AddWithValue("@address2", data.Address2);
+                    cmdUpdate.Parameters.AddWithValue("@city", data.City);
+                    cmdUpdate.Parameters.AddWithValue("@state", data.State);
+                    cmdUpdate.Parameters.AddWithValue("@zip_code", data.ZipCode);
+                    cmdUpdate.Parameters.AddWithValue("@email", data.Email);
+                    cmdUpdate.Parameters.AddWithValue("@phone", data.Phone);
+                    cmdUpdate.Parameters.AddWithValue("@alt_phone", data.AlternatePhone);
+                    cmdUpdate.Parameters.AddWithValue("@communityID", data.CommunityID);
+                    cmdUpdate.Parameters.AddWithValue("@licensed", isLicensed);
+                    cmdUpdate.Parameters.AddWithValue("@active", isActive);
+                    cmdUpdate.Parameters.AddWithValue("@active_date", data.ActiveDate);
+                    cmdUpdate.Parameters.AddWithValue("@inactive_date", Utilities.ToDBNull(data.InactiveDate));
+                    cmdUpdate.Parameters.AddWithValue("@administrator", isAdmin);
+                    cmdUpdate.ExecuteNonQuery();
+                }
+            }
+
+            return true;
         }
 
         public bool Delete(int id)
         {
-            bool cmdStatus = false;
             FCNMemberData member = GetFCNMemberByID(id);
             if (member != null)
             {
-                string sqlDelete = string.Format("exec FCN..del_fcn_member {0}", id);
-                cmdStatus = Utilities.ExecNonQuery(sqlDelete);
+                //Get connection string - to be replaced with different credentials later
+                string fcnConnectionString = Utilities.GetDBConnectionString();
+
+                string sqlDelete = "exec FCN..del_service_subcategory @ID";
+                using (SqlConnection fcnDBConnection = new SqlConnection(fcnConnectionString))
+                {
+                    fcnDBConnection.Open();
+                    using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, fcnDBConnection))
+                    {
+                        cmdDelete.Parameters.AddWithValue("@ID", id);
+                        cmdDelete.ExecuteNonQuery();
+                    }
+                }
             }
-            return cmdStatus;
+            return true;
         }
     }
 }
