@@ -39,7 +39,7 @@ namespace FCNHelpers
                 {
                     // Create the connectionString  
                     // Trusted_Connection is used to denote the connection uses Windows Authentication  
-                    conn.ConnectionString = "Server=SCHMIDT-DEN;Database=FCN;" +
+                    conn.ConnectionString = "Server=DLSCHMIDT-LAP;Database=FCN;" +
                         "Trusted_Connection=true;Connection timeout=30;User Id=****;" +
                         "Password=****; ";
                     conn.Open();
@@ -63,7 +63,7 @@ namespace FCNHelpers
         {
             try
             {
-                string connectionString = "Server=SCHMIDT-DEN;Database=FCN;" +
+                string connectionString = "Server=DLSCHMIDT-LAP;Database=FCN;" +
                         "Trusted_Connection=true;Connection timeout=30;User Id=****;" +
                         "Password=****; ";
                 SqlConnection conn = new SqlConnection(connectionString);
@@ -82,6 +82,14 @@ namespace FCNHelpers
                 SqlDataReader sqlDataReader = null;
                 return sqlDataReader;
             }
+        }
+
+        public static string GetDBConnectionString()
+        {
+            string connectionString = "Server=DLSCHMIDT-LAP;Database=FCN;" +
+                        "Trusted_Connection=true;Connection timeout=30;User Id=****;" +
+                        "Password=****; ";
+            return connectionString;
         }
     }
 }
