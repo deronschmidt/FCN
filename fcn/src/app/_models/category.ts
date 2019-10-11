@@ -1,8 +1,8 @@
 export class Category {
-    ID : number;
-    CategoryName : string;
-    Description : string;
-    Active : boolean;
-    CreatedDate : Date;
-    UpdatedDate : Date;
+    id: number;
+    categoryName: string;
+    description: string;
+    active: boolean;
+    createdDate: Date;
+    updatedDate: Date;
 }

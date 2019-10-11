@@ -1,8 +1,8 @@
 export class Role {
-    ID : number;
-    RoleType : string;
-    Description : string;
-    Active : boolean;
-    CreatedDate : Date;
-    UpdatedDate : Date;
+    id: number;
+    roleType: string;
+    description: string;
+    active: boolean;
+    createdDate: Date;
+    updatedDate: Date;
 }

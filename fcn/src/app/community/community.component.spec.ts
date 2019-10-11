@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CommunityComponent } from './community.component';
 
 describe('CommunityComponent', () => {
@@ -8,9 +7,9 @@ describe('CommunityComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommunityComponent ]
+      declarations: [CommunityComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -9,17 +9,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let category of categories">
+            <tr *ngFor="let category of categories; let idx = index">
                 <td>{{category.categoryName}}</td>
                 <td>{{category.description}}</td>
                 <td>
-                        <div class="btn-group-sm btn-group-horizontal">
-                            <button class="btn btn-primary my-small-btn btn-space" ng-click="edit(item)">Edit</button>
-                            <button class="btn btn-danger my-small-btn btn-space" ng-click="delete(item)">Delete</button>
-                        </div>
-                    </td>
+                    <div class="btn-group-sm btn-group-horizontal">
+                        <button class="btn btn-primary dls-btn-space dls-small-btn" (click)="editCategory(idx, category)">Edit</button>
+                        <button class="btn btn-danger dls-btn-space dls-small-btn" (click)="delCategory(category)">Delete</button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
-    <button class="btn btn-sm btn-outline-primary" (click)="open()">Add New Category</button>
+    <button class="btn btn-sm btn-outline-primary" (click)="addNewCategory()">Add New Category</button>
 </div>

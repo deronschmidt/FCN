@@ -1,0 +1,390 @@
+
+<div class="modal-header">
+    <div *ngIf="editMode == 'newRole'">
+        <h4 class="modal-title">New Role</h4>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="newRoleType">Role Type</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !newRole.roleType">&nbsp; &nbsp; *
+                    Required</label>
+                <input type="text" class="form-control modal-input-size" id="newRoleType" required
+                    [(ngModel)]="newRole.roleType" (ngModelChange)="enableSave()" name="newRoleType">
+            </div>
+            <div class="form-group">
+                <label for="newRoleDescription">Description</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !newRole.description">&nbsp; &nbsp; *
+                    Required</label>
+                <input type="text" class="form-control" id="newRoleDescription" required
+                    [(ngModel)]="newRole.description" (ngModelChange)="enableSave()" name="newRoleDescription">
+            </div>
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="newRole.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="createNewRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'editRole'">
+        <h4 class="modal-title">Edit Role</h4>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="editRoleType">Role Type</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !existingRole.roleType">&nbsp; &nbsp;
+                    * Required</label>
+                <input style="width: 425px;" type="text" class="form-control" id="editRoleType" required
+                    [(ngModel)]="existingRole.roleType" (ngModelChange)="enableSave()" name="editRoleType">
+            </div>
+            <div class="form-group">
+                <label for="editRoleDescription">Description</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !existingRole.description">&nbsp;
+                    &nbsp; * Required</label>
+                <input type="text" class="form-control" id="editRoleDescription" required
+                    [(ngModel)]="existingRole.description" (ngModelChange)="enableSave()" name="editRoleDescription">
+            </div>
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="existingRole.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="updateExistingRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'newCategory'">
+        <h4 class="modal-title">New Category</h4>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="newCategoryName">Category Name</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !newCategory.categoryName">&nbsp;
+                    &nbsp; * Required</label>
+                <input type="text" class="form-control modal-input-size" id="newCategoryName" required
+                    [(ngModel)]="newCategory.categoryName" (ngModelChange)="enableSave()" name="newCategoryName">
+            </div>
+            <div class="form-group">
+                <label for="newCategoryDescription">Description</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !newCategory.description">&nbsp;
+                    &nbsp; * Required</label>
+                <input type="text" class="form-control" id="newCategoryDescription" required
+                    [(ngModel)]="newCategory.description" (ngModelChange)="enableSave()" name="newCategoryDescription">
+            </div>
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="newCategory.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="createNewCategory()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'editCategory'">
+        <h4 class="modal-title">Edit Category</h4>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="existingCategoryName">Category Name</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !existingCategory.categoryName">&nbsp;
+                    &nbsp;
+                    * Required</label>
+                <input type="text" class="form-control modal-input-size" id="existingCategoryName" required
+                    [(ngModel)]="existingCategory.categoryName" (ngModelChange)="enableSave()"
+                    name="existingCategoryName">
+            </div>
+            <div class="form-group">
+                <label for="existingCategoryDescription">Description</label>
+                <label class="text-danger font-italic small" *ngIf="!saveValid && !existingCategory.description">&nbsp;
+                    &nbsp; * Required</label>
+                <input type="text" class="form-control" id="existingCategoryDescription" required
+                    [(ngModel)]="existingCategory.description" (ngModelChange)="enableSave()"
+                    name="existingCategoryDescription">
+            </div>
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="existingCategory.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="updateExistingCategory()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'newSubcategory'">
+        <h4 class="modal-title">New Subcategory</h4>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="newSubcategoryName">Subcategory Name</label>
+                <input style="width: 425px;" type="text" class="form-control" id="newSubcategoryName" required
+                    [(ngModel)]="newSubcategory.subcategoryName" (ngModelChange)="enableSave()" name="newSubcategoryName">
+            </div>
+            <div class="form-group">
+                    <label for="newSubcategoryParent">Category</label>
+                <select class="form-control">                    
+                    <option *ngFor="let category of categories" id="newSubcategoryParent">{{category.categoryName}} </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="newSubcategoryDescription">Description</label>
+                <input type="text" class="form-control" id="newSubcategoryDescription" required
+                    [(ngModel)]="newSubcategory.description" (ngModelChange)="enableSave()" name="newSubcategoryDescription">
+            </div>
+            <label>Active</label>
+            <br/>
+            <input type="checkbox" [(ngModel)]="newSubcategory.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="createNewSubcategory()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'editSubcategory'">
+        <h4 class="modal-title">Edit Subcategory</h4>
+        <div class="modal-body">
+                <div class="form-group">
+                        <label for="existingSubcategoryName">Subcategory Name</label>
+                        <input style="width: 425px;" type="text" class="form-control" id="existingSubcategoryName" required
+                            [(ngModel)]="existingSubcategory.subCategoryName" (ngModelChange)="enableSave()" name="existingSubcategoryName">
+                    </div>
+                    <div class="form-group">
+                            <label for="existingSubcategoryParent">Category</label>
+                        <select [(ngModel)]="existingSubcategory.categoryName"  class="form-control">                    
+                            <option *ngFor="let category of categories" id="existingSubcategoryParent">{{category.categoryName}} </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="existingSubcategoryDescription">Description</label>
+                        <input type="text" class="form-control" id="existingSubcategoryDescription" required
+                            [(ngModel)]="existingSubcategory.description" (ngModelChange)="enableSave()" name="existingSubcategoryDescription">
+                    </div>
+                    <label>Active</label>
+                    <br/>
+                    <input type="checkbox" [(ngModel)]="existingSubcategory.active" />
+                    <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="updateExistingRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'newMember'">
+        <h4 class="modal-title">New Member</h4>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="newMemberFirstName">First Name</label>
+                        <input type="text" class="form-control dls-input-width" id="newMemberFirstName" required
+                            [(ngModel)]="newMember.firstName" (ngModelChange)="enableSave()" name="newMemberFirstName">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="newMemberLastName">Last Name</label>
+                        <input type="text" class="form-control dls-input-width" id="newMemberLastName" required
+                            [(ngModel)]="newMember.lastName" (ngModelChange)="enableSave()" name="newMemberLastName">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="newMemberAddress1">Address 1</label>
+                        <input type="text" class="form-control dls-input-width" id="newMemberAddress1" required
+                            [(ngModel)]="newMember.address1" (ngModelChange)="enableSave()" name="newMemberAddress1">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="newMemberAddress2">Address 2</label>
+                        <input type="text" class="form-control dls-input-width" id="newMemberAddress2"
+                            [(ngModel)]="newMember.address2" (ngModelChange)="enableSave()" name="newMemberAddress2">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="newMemberCity">City</label>
+                        <input style="width: 425px;" type="text" class="form-control" id="newMemberCity" required
+                            [(ngModel)]="newMember.address1" (ngModelChange)="enableSave()" name="newMemberCity">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="newMemberState">State</label>
+                        <input style="width: 150px;" type="text" class="form-control" id="newMemberState" required
+                            [(ngModel)]="newMember.state" (ngModelChange)="enableSave()" name="newMemberState">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="newMemberZipCode">Zip Code</label>
+                        <input style="width: 150px;" type="text" class="form-control" id="newMemberZipCode" required
+                            [(ngModel)]="newMember.zipCode" (ngModelChange)="enableSave()" name="newMemberZipCode">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="newMemberPhone">Phone</label>
+                <input style="width: 425px;" type="text" class="form-control" id="newMemberPhone" [(ngModel)]="newMember.phone"
+                    (ngModelChange)="enableSave()" name="newMemberPhone">
+            </div>
+            <div class="form-group">
+                <label for="newMemberAltPhone">Alternate Phone</label>
+                <input style="width: 425px;" type="text" class="form-control" id="newMemberAltPhone"
+                    [(ngModel)]="newMember.altPhone" (ngModelChange)="enableSave()" name="newMemberAltPhone">
+            </div>
+            <div class="form-group">
+                <label for="newMemberEmail">Email</label>
+                <input style="width: 425px;" type="text" class="form-control" id="newMemberEmail" [(ngModel)]="newMember.email"
+                    (ngModelChange)="enableSave()" name="newMemberEmail">
+            </div>
+            <div class="form-group">
+                <label for="newMemberRole">Role</label>
+                <select class="form-control">
+                    <option *ngFor="let role of roles" id="newMemberRole">{{role.roleType}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="newMemberCommunity">Community</label>
+                <select class="form-control">
+                    <option *ngFor="let community of communities" id="newMemberCommunity">{{community.communityName}}
+                    </option>
+                </select>
+            </div>
+            <label>Licensed</label>
+            <br />
+            <input type="checkbox" [(ngModel)]="newMember.licensed" />
+            <br />
+            <label>Administrator</label>
+            <br />
+            <input type="checkbox" [(ngModel)]="newMember.administrator" />
+            <br />
+            <label>Active</label>
+            <br />
+            <input type="checkbox" [(ngModel)]="newMember.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="createNewCommunity()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'editMember'">
+        <h4 class="modal-title">Edit Member</h4>
+        <div class="modal-body">
+            <label for="editRoleType">Role Type</label>
+            <input style="width: 425px;" type="text" class="form-control" id="editRoleType" required
+                [(ngModel)]="existingRole.roleType" (ngModelChange)="enableSave()" name="editRoleType">
+            <label for="editRoleDescription">Description</label>
+            <input type="text" class="form-control" id="editRoleDescription" required
+                [(ngModel)]="existingRole.description" (ngModelChange)="enableSave()" name="editRoleDescription">
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="existingRole.active" />
+            <br />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="updateExistingRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'newCommunity'">
+        <h4 class="modal-title">New Community</h4>
+        <div class="modal-body">
+            <label for="newRoleType">Role Type</label>
+            <input style="width: 425px;" type="text" class="form-control" id="newRoleType" required
+                [(ngModel)]="newRole.roleType" (ngModelChange)="enableSave()" name="newRoleType">
+            <label for="newRoleDescription">Description</label>
+            <input type="text" class="form-control" id="newRoleDescription" required [(ngModel)]="newRole.description"
+                (ngModelChange)="enableSave()" name="newRoleDescription">
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="newRole.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="createNewRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'editCommunity'">
+        <h4 class="modal-title">Edit Community</h4>
+        <div class="modal-body">
+            <label for="editRoleType">Role Type</label>
+            <input style="width: 425px;" type="text" class="form-control" id="editRoleType" required
+                [(ngModel)]="existingRole.roleType" (ngModelChange)="enableSave()" name="editRoleType">
+            <label for="editRoleDescription">Description</label>
+            <input type="text" class="form-control" id="editRoleDescription" required
+                [(ngModel)]="existingRole.description" (ngModelChange)="enableSave()" name="editRoleDescription">
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="existingRole.active" />
+            <br />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="updateExistingRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'newActivity'">
+        <h4 class="modal-title">New Activity</h4>
+        <div class="modal-body">
+            <label for="newRoleType">Role Type</label>
+            <input style="width: 425px;" type="text" class="form-control" id="newRoleType" required
+                [(ngModel)]="newRole.roleType" (ngModelChange)="enableSave()" name="newRoleType">
+            <label for="newRoleDescription">Description</label>
+            <input type="text" class="form-control" id="newRoleDescription" required [(ngModel)]="newRole.description"
+                (ngModelChange)="enableSave()" name="newRoleDescription">
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="newRole.active" />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="createNewRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editMode == 'editActivity'">
+        <h4 class="modal-title">Edit Activity</h4>
+        <div class="modal-body">
+            <label for="editRoleType">Role Type</label>
+            <input style="width: 425px;" type="text" class="form-control" id="editRoleType" required
+                [(ngModel)]="existingRole.roleType" (ngModelChange)="enableSave()" name="editRoleType">
+            <label for="editRoleDescription">Description</label>
+            <input type="text" class="form-control" id="editRoleDescription" required
+                [(ngModel)]="existingRole.description" (ngModelChange)="enableSave()" name="editRoleDescription">
+            <label>Active</label>
+            <input type="checkbox" [(ngModel)]="existingRole.active" />
+            <br />
+            <br />
+            <div>
+                <button type="button" class="btn btn-outline-primary dls-btn-space dls-small-btn" [disabled]="!saveValid"
+                    (click)="updateExistingRole()">Ok</button>
+                <button type="button" class="btn btn-outline-secondary dls-btn-space dls-small-btn"
+                    (click)="onClose()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

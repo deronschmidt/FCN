@@ -1,29 +1,28 @@
 export class Community {
-    ID : number;
-    CommunityID : number;
-    CommunityName : string;
-    Affiliation : string;
-    Address1 : string;
-    Address2 : string;
-    City : string;
-    State : string;
-    ZipCode : string;
-    Phone : string;
-    AlternatePhone : string;
-    Email : string;
-    Website : string;
-    Active : boolean;
-    Contacts : CommunityContact[];
-    CreatedDate : Date;
-    UpdatedDate : Date;
+    id: number;
+    communityName: string;
+    affiliation: string;
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phone: string;
+    alternatePhone: string;
+    email: string;
+    website: string;
+    active: boolean;
+    contacts: CommunityContact[];
+    createdDate: Date;
+    updatedDate: Date;
 }
 
 export class CommunityContact {
-    ID : number;
-    CommunityID : number;
-    CommunityName : string;
-    ContactID : number;
-    ContactName : string;
-    CreatedDate : Date;
-    UpdatedDate : Date;
+    id: number;
+    communityID: number;
+    communityName: string;
+    contactID: number;
+    contactName: string;
+    createdDate: Date;
+    updatedDate: Date;
 }

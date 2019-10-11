@@ -10,14 +10,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let community of communities">
+            <tr *ngFor="let community of communities; let idx = index">
                 <td>{{community.communityName}}</td>
                 <td>{{community.affiliation}}</td>
                 <td>{{community.city}}</td>
                 <td>
                     <div class="btn-group-sm btn-group-horizontal">
-                        <button class="btn btn-primary my-small-btn btn-space" ng-click="edit(item)">Edit</button>
-                        <button class="btn btn-danger my-small-btn btn-space" ng-click="delete(item)">Delete</button>
+                        <button class="btn btn-primary dls-btn-space dls-small-btn" (click)="edit(item)">Edit</button>
+                        <button class="btn btn-danger dls-btn-space dls-small-btn" (click)="delete(item)">Delete</button>
                     </div>
                 </td>
             </tr>

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
 import { Member } from '../_models/member';
 import { Community } from '../_models/community';
 import { CommunityContact } from '../_models/community';
@@ -9,7 +7,6 @@ import { Activity } from '../_models/activity';
 import { Role } from '../_models/role';
 import { Subcategory } from '../_models/subcategory';
 import { Category } from '../_models/category';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,137 +27,232 @@ export class FcnService {
   }
 
   // FCN Member accessors
-  GetAllMembers ()
-  {
+  GetAllMembers() {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     return this.http.get(this.Url + 'FCNMember', httpOptions);
   }
 
-  GetMember (id: number)
-  {
+  GetMember(id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.get(this.Url + 'FCNMember/${id}', httpOptions);
+    return this.http.get(this.Url + `FCNMember/${id}`, httpOptions);
   }
 
   CreateMember(fcnmember: Member) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Member[]>(this.Url + 'FCNMember/', fcnmember, httpOptions)
+    return this.http.post(this.Url + 'FCNMember/', fcnmember, httpOptions).subscribe(
+      data => {
+        // console.log("POST Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   UpdateMember(fcnmember: Member, id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Member[]>(this.Url + 'FCNMember/${id}', fcnmember, httpOptions)
+    return this.http.put(this.Url + `FCNMember/${id}`, fcnmember, httpOptions).subscribe(
+      data => {
+        // console.log("PUT Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
-  
+
   DeleteMember(id: number) {
-    return this.http.delete(this.Url + 'FCNMember/${id}');
+    return this.http.delete(this.Url + `FCNMember/${id}`).subscribe(
+      data => {
+        // console.log("DELETE Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   // Community accessors
-  GetAllCommunities ()
-  {
+  GetAllCommunities() {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     return this.http.get(this.Url + 'Community', httpOptions);
   }
 
-  GetCommunity(id: number)
-  {
+  GetCommunity(id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.get(this.Url + 'Community/${id}', httpOptions);
+    return this.http.get(this.Url + `Community/${id}`, httpOptions);
   }
 
   CreateCommunity(community: Community) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Community[]>(this.Url + 'Community/', community, httpOptions)
+    return this.http.post(this.Url + 'Community/', community, httpOptions).subscribe(
+      data => {
+        // console.log("POST Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   UpdateCommunity(community: Community, id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Community[]>(this.Url + 'Community/${id}', community, httpOptions)
+    return this.http.put(this.Url + `Community/${id}`, community, httpOptions).subscribe(
+      data => {
+        // console.log("PUT Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
-  
+
   DeleteCommunity(id: number) {
-    return this.http.delete(this.Url + 'Community/${id}');
+    return this.http.delete(this.Url + `Community/${id}`).subscribe(
+      data => {
+        // console.log("DELETE Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   // Service Category accessors
-  GetAllCategories ()
-  {
+  GetAllCategories() {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     return this.http.get(this.Url + 'ServiceCategory', httpOptions);
   }
 
-  GetCategory(id: number)
-  {
+  GetCategory(id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.get(this.Url + 'ServiceCategory/${id}', httpOptions);
+    return this.http.get(this.Url + `ServiceCategory/${id}`, httpOptions);
   }
 
-  CreateCategory(subcategory: Subcategory) {
+  CreateCategory(category: Category) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Subcategory[]>(this.Url + 'ServiceCategory/', subcategory, httpOptions)
+    return this.http.post(this.Url + 'ServiceCategory/', category, httpOptions).subscribe(
+      data => {
+        // console.log("POST Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
-  UpdateCategory(subcategory: Subcategory, id: number) {
+  UpdateCategory(category: Category, id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Subcategory[]>(this.Url + 'ServiceCategory/${id}', subcategory, httpOptions)
+    return this.http.put(this.Url + `ServiceCategory/${id}`, category, httpOptions).subscribe(
+      data => {
+        // console.log("PUT Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
-  
+
   DeleteCategory(id: number) {
-    return this.http.delete(this.Url + 'ServiceCategory/${id}');
+    return this.http.delete(this.Url + `ServiceCategory/${id}`).subscribe(
+      data => {
+        // console.log("DELETE Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   // Service Subcategory accessors
-  GetAllSubcategories ()
-  {
+  GetAllSubcategories() {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     return this.http.get(this.Url + 'ServiceSubcategory', httpOptions);
   }
 
-  GetSubcategory(id: number)
-  {
+  GetSubcategory(id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.get(this.Url + 'ServiceSubcategory/${id}', httpOptions);
+    return this.http.get(this.Url + `ServiceSubcategory/${id}`, httpOptions);
   }
 
   CreateSubcategory(subcategory: Subcategory) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Subcategory[]>(this.Url + 'ServiceSubcategory/', subcategory, httpOptions)
+    return this.http.post(this.Url + `ServiceSubcategory/`, subcategory, httpOptions).subscribe(
+      data => {
+        // console.log("POST Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   UpdateSubcategory(subcategory: Subcategory, id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Subcategory[]>(this.Url + 'ServiceSubcategory/${id}', subcategory, httpOptions)
+    return this.http.put(this.Url + `ServiceSubcategory/${id}`, subcategory, httpOptions).subscribe(
+      data => {
+        // console.log("PUT Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
-  
+
   DeleteSubcategory(id: number) {
-    return this.http.delete(this.Url + 'ServiceSubcategory/${id}');
+    return this.http.delete(this.Url + `ServiceSubcategory/${id}`).subscribe(
+      data => {
+        // console.log("DELETE Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   // Member Role accessors
-  GetAllRoles ()
-  {
+  GetAllRoles() {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     return this.http.get(this.Url + 'MemberRole', httpOptions);
   }
 
-  GetRole(id: number)
-  {
+  GetRole(id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.get(this.Url + 'MemberRole/${id}', httpOptions);
+    return this.http.get(this.Url + `MemberRole/${id}`, httpOptions);
   }
 
   CreateRole(role: Role) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Role[]>(this.Url + 'MemberRole/', role, httpOptions)
+    return this.http.post(this.Url + 'MemberRole/', role, httpOptions).subscribe(
+      data => {
+        // console.log("POST Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 
   UpdateRole(role: Role, id: number) {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    return this.http.post<Role[]>(this.Url + 'MemberRole/${id}', role, httpOptions)
+    return this.http.put(this.Url + `MemberRole/${id}` , role, httpOptions).subscribe(
+      data => {
+        // console.log("PUT Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
-  
+
   DeleteRole(id: number) {
-    return this.http.delete(this.Url + 'MemberRole/${id}');
+    return this.http.delete(this.Url + `MemberRole/${id}`).subscribe(
+      data => {
+        // console.log("DELETE Request is successful ", data);
+      },
+      error => {
+        console.log("Error", error);
+      }
+    );
   }
 }

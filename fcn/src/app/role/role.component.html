@@ -4,22 +4,24 @@
         <thead>
             <tr class="text-center text-uppercase">
                 <th>Role Name</th>
-                <th>Description</th> 
-                <th>Actions</th>               
+                <th>Description</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let role of roles">
+            <tr *ngFor="let role of roles; let idx = index">
                 <td>{{role.roleType}}</td>
                 <td>{{role.description}}</td>
                 <td>
-                        <div class="btn-group-sm btn-group-horizontal">
-                            <button class="btn btn-primary my-small-btn btn-space" ng-click="edit(item)">Edit</button>
-                            <button class="btn btn-danger my-small-btn btn-space" ng-click="delete(item)">Delete</button>
-                        </div>
-                    </td>
+                    <div class="btn-group-sm btn-group-horizontal">
+                        <button class="btn btn-primary dls-btn-space dls-small-btn"
+                            (click)="editRole(idx, role)">Edit</button>
+                        <button class="btn btn-danger dls-btn-space dls-small-btn"
+                            (click)="delRole(role)">Delete</button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
-    <button class="btn btn-sm btn-outline-primary" (click)="open()">Add New Role</button>
+    <button class="btn btn-sm btn-outline-primary" (click)="addNewRole()">Add New Role</button>
 </div>

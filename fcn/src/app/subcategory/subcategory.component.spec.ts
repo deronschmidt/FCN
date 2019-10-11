@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SubcategoryComponent } from './subcategory.component';
 
 describe('SubcategoryComponent', () => {
@@ -8,9 +7,9 @@ describe('SubcategoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubcategoryComponent ]
+      declarations: [SubcategoryComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

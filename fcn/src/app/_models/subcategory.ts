@@ -1,10 +1,10 @@
 export class Subcategory {
-    ID : number;
-    SubCategoryName : string;
-    CategoryID : number;
-    CategoryName : string;
-    Description : string;
-    Active : boolean;
-    CreatedDate : Date;
-    UpdatedDate : Date;
+    id: number;
+    subCategoryName: string;
+    categoryID: number;
+    categoryName: string;
+    description: string;
+    active: boolean;
+    createdDate: Date;
+    updatedDate: Date;
 }

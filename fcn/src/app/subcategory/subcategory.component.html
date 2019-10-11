@@ -10,18 +10,18 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let subcategory of subcategories">
+            <tr *ngFor="let subcategory of subcategories; let idx = index">
                 <td>{{subcategory.subCategoryName}}</td>
                 <td>{{subcategory.categoryName}}</td>
                 <td>{{subcategory.description}}</td>
                 <td>
                     <div class="btn-group-sm btn-group-horizontal">
-                        <button class="btn btn-primary my-small-btn btn-space" ng-click="edit(item)">Edit</button>
-                        <button class="btn btn-danger my-small-btn btn-space" ng-click="delete(item)">Delete</button>
+                        <button class="btn btn-primary dls-btn-space dls-small-btn" (click)="editSubcategory(idx, subcategory)">Edit</button>
+                        <button class="btn btn-danger dls-btn-space dls-small-btn" (click)="delSubcategory(subcategory)">Delete</button>
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
-    <button class="btn btn-sm btn-outline-primary" (click)="open()">Add New Subcategory</button>
+    <button class="btn btn-sm btn-outline-primary" (click)="addNewSubcategory()">Add New Subcategory</button>
 </div>
