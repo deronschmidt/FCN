@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MemberComponent } from './member/member.component';
-import { CommunityComponent } from './community/community.component';  
+import { CommunityComponent } from './community/community.component';
 import { RoleComponent } from './role/role.component';
 import { CategoryComponent } from './category/category.component';
 import { SubcategoryComponent } from './subcategory/subcategory.component';
